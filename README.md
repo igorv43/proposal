@@ -344,18 +344,32 @@ feeding the burn and the Community Pool that **already exist**.
 ## 8. Roadmap by gates, not by dates
 
 ```mermaid
-flowchart TB
-    S0["Foundation<br/>native Hyperlane · canonical LUNC ·<br/>migration of old wrappers ·<br/>public proof of backing"] --> G0{"Audit done ·<br/>equation closes<br/>block by block"}
-    G0 --> S1["Liquid staking<br/>stLUNC with own revenue ·<br/>direct burn active"]
-    S1 --> G1{"Dedicated audit ·<br/>30 days of clean invariants"}
-    G1 --> S2["Demand gate<br/>letters from 3 independent<br/>market makers + legal opinion"]
-    S2 --> G2{"Signed commitments?<br/>no → perpetuals do not start"}
-    G2 --> S3["Incentivized testnet<br/>auction engine · perpetuals ·<br/>extended oracle"]
-    S3 --> G3{"60 days of metrics met ·<br/>zero invariant violations"}
-    G3 --> S4["BTC-PERP on mainnet<br/>first market, low cap"]
-    S4 --> G4{"At least 2 integrators<br/>in production"}
-    G4 --> S5["Expansion<br/>ETH-PERP · stLUNC as collateral ·<br/>LUNC-PERP last"]
-    S5 --> G5{"Continuity criteria<br/>measured at 6 months"}
+flowchart LR
+    subgraph P0["Stage · Foundation"]
+        direction TB
+        S0["Native Hyperlane<br/>canonical LUNC<br/>migration of old wrappers<br/>public proof of backing"] --> G0{"GATE<br/>audit done ·<br/>equation closes<br/>block by block"}
+    end
+    subgraph P1["Stage · Liquid staking"]
+        direction TB
+        S1["stLUNC with own revenue<br/>direct burn active"] --> G1{"GATE<br/>dedicated audit ·<br/>30 days of<br/>clean invariants"}
+    end
+    subgraph P2["Stage · Demand gate"]
+        direction TB
+        S2["Letters from 3 independent<br/>market makers<br/>+ legal opinion"] --> G2{"GATE<br/>signed commitments?<br/>no → perpetuals<br/>do not start"}
+    end
+    subgraph P3["Stage · Incentivized testnet"]
+        direction TB
+        S3["Auction engine<br/>perpetuals<br/>extended oracle"] --> G3{"GATE<br/>60 days of metrics met ·<br/>zero invariant<br/>violations"}
+    end
+    subgraph P4["Stage · BTC-PERP on mainnet"]
+        direction TB
+        S4["First market<br/>low cap"] --> G4{"GATE<br/>at least 2 integrators<br/>in production"}
+    end
+    subgraph P5["Stage · Expansion"]
+        direction TB
+        S5["ETH-PERP<br/>stLUNC as collateral<br/>LUNC-PERP last"] --> G5{"GATE<br/>continuity criteria<br/>measured at 6 months"}
+    end
+    P0 --> P1 --> P2 --> P3 --> P4 --> P5
     style G0 fill:#f6e05e,color:#000
     style G1 fill:#f6e05e,color:#000
     style G2 fill:#f6e05e,color:#000
