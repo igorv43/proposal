@@ -255,7 +255,7 @@ liquidez. O orçamento que a proposta pede é para engenharia e auditoria, não
 para liquidez.
 
 ```mermaid
-flowchart TB
+flowchart LR
     subgraph W1["1 · stLUNC → LUNC"]
         direction TB
         R1["Resgate = o unbonding normal da chain<br/>o seu LUNC esteve delegado o tempo todo"]
@@ -274,6 +274,7 @@ flowchart TB
         U1 --> U2["Sacar = devolver o que é dele<br/>pela rota de volta"]
         U1 --> U3["O que precisa de proteção é a solvência<br/>do conjunto: fundo de seguro<br/>(alimentado pela taxa), depois ADL"]
     end
+    W1 ~~~ W2 ~~~ W3
 ```
 
 **1. Resgate de stLUNC → LUNC.** O resgate não é um swap — é o unbonding normal

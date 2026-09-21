@@ -540,7 +540,7 @@ liquidity pool. The budget this proposal asks for is for engineering and audits,
 not for liquidity.
 
 ```mermaid
-flowchart TB
+flowchart LR
     subgraph W1["1 · stLUNC → LUNC"]
         direction TB
         R1["Redeem = the chain's normal unbonding<br/>your own LUNC was delegated the whole time"]
@@ -559,6 +559,7 @@ flowchart TB
         U1 --> U2["Withdraw = return what is theirs<br/>through the route back"]
         U1 --> U3["What needs protection is solvency<br/>of the whole: insurance fund<br/>(fed by protocol fees), then ADL"]
     end
+    W1 ~~~ W2 ~~~ W3
 ```
 
 **1. Redeeming stLUNC for LUNC (the liquid-staking case).** The redemption is
