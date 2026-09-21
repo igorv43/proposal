@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="450" viewBox="0 0 1600 450">
+<rect x="0" y="0" width="1600" height="450" rx="24" fill="#0D1319"/>
+<rect x="50" y="50" width="360" height="90" rx="16" fill="#141C25" stroke="#263340" stroke-width="2"/>
+<text x="230" y="105" text-anchor="middle" fill="#E2E8F0" font-family="Archivo, Arial, 'DejaVu Sans', sans-serif" font-size="27" font-weight="600">Phantom, em Solana</text>
+<rect x="50" y="165" width="360" height="90" rx="16" fill="#141C25" stroke="#263340" stroke-width="2"/>
+<text x="230" y="220" text-anchor="middle" fill="#E2E8F0" font-family="Archivo, Arial, 'DejaVu Sans', sans-serif" font-size="27" font-weight="600">MetaMask, na BNB Chain</text>
+<rect x="50" y="280" width="360" height="90" rx="16" fill="#141C25" stroke="#263340" stroke-width="2"/>
+<text x="230" y="335" text-anchor="middle" fill="#E2E8F0" font-family="Archivo, Arial, 'DejaVu Sans', sans-serif" font-size="27" font-weight="600">Qualquer uma, no Ethereum</text>
+<line x1="410" y1="210" x2="580" y2="210" stroke="#FFD24A" stroke-width="5"/>
+<path d="M568 202 L580 210 L568 218 Z" fill="#FFD24A"/>
+<rect x="580" y="145" width="430" height="130" rx="16" fill="#1C1608" stroke="#4A3A10" stroke-width="2"/>
+<text x="795" y="200" text-anchor="middle" fill="#FFD24A" font-family="Archivo, Arial, 'DejaVu Sans', sans-serif" font-size="29" font-weight="700">Uma assinatura</text>
+<text x="795" y="243" text-anchor="middle" fill="#94A3B8" font-family="Archivo, Arial, 'DejaVu Sans', sans-serif" font-size="24">depósito + permissão de operar</text>
+<line x1="1010" y1="210" x2="1180" y2="210" stroke="#FFD24A" stroke-width="5"/>
+<path d="M1168 202 L1180 210 L1168 218 Z" fill="#FFD24A"/>
+<rect x="1180" y="115" width="370" height="190" rx="16" fill="#141C25" stroke="#263340" stroke-width="2"/>
+<text x="1365" y="175" text-anchor="middle" fill="#E2E8F0" font-family="Archivo, Arial, 'DejaVu Sans', sans-serif" font-size="28" font-weight="700">Conta na Terra Classic</text>
+<text x="1365" y="220" text-anchor="middle" fill="#94A3B8" font-family="Archivo, Arial, 'DejaVu Sans', sans-serif" font-size="24">ordens locais, na velocidade</text>
+<text x="1365" y="254" text-anchor="middle" fill="#94A3B8" font-family="Archivo, Arial, 'DejaVu Sans', sans-serif" font-size="24">do leilão, sem ponte no caminho</text>
+<text x="800" y="415" text-anchor="middle" fill="#94A3B8" font-family="Archivo, Arial, 'DejaVu Sans', sans-serif" font-size="26">O usuário não sabe que existe uma ponte — e não precisa saber</text>
+</svg>

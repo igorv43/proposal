@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="420" viewBox="0 0 1600 420">
+<rect x="0" y="0" width="1600" height="420" rx="24" fill="#0D1319"/>
+<rect x="50" y="60" width="460" height="220" rx="18" fill="#141C25" stroke="#263340" stroke-width="2"/>
+<text x="280" y="125" text-anchor="middle" fill="#FFD24A" font-family="Archivo, Arial, 'DejaVu Sans', sans-serif" font-size="31" font-weight="700">1. Coleta</text>
+<text x="280" y="180" text-anchor="middle" fill="#E2E8F0" font-family="Archivo, Arial, 'DejaVu Sans', sans-serif" font-size="25">Ordens dos usuários entram</text>
+<text x="280" y="215" text-anchor="middle" fill="#E2E8F0" font-family="Archivo, Arial, 'DejaVu Sans', sans-serif" font-size="25">no lote, e o lote é selado</text>
+<rect x="570" y="60" width="460" height="220" rx="18" fill="#141C25" stroke="#263340" stroke-width="2"/>
+<text x="800" y="125" text-anchor="middle" fill="#FFD24A" font-family="Archivo, Arial, 'DejaVu Sans', sans-serif" font-size="31" font-weight="700">2. Lances selados</text>
+<text x="800" y="180" text-anchor="middle" fill="#E2E8F0" font-family="Archivo, Arial, 'DejaVu Sans', sans-serif" font-size="25">Formadores de mercado enviam</text>
+<text x="800" y="215" text-anchor="middle" fill="#E2E8F0" font-family="Archivo, Arial, 'DejaVu Sans', sans-serif" font-size="25">preços lacrados, com garantia</text>
+<rect x="1090" y="60" width="460" height="220" rx="18" fill="#1C1608" stroke="#4A3A10" stroke-width="2"/>
+<text x="1320" y="125" text-anchor="middle" fill="#FFD24A" font-family="Archivo, Arial, 'DejaVu Sans', sans-serif" font-size="31" font-weight="700">3. Execução</text>
+<text x="1320" y="180" text-anchor="middle" fill="#E2E8F0" font-family="Archivo, Arial, 'DejaVu Sans', sans-serif" font-size="25">Lances abertos, preço único —</text>
+<text x="1320" y="215" text-anchor="middle" fill="#E2E8F0" font-family="Archivo, Arial, 'DejaVu Sans', sans-serif" font-size="25">todos executam nele</text>
+<line x1="510" y1="170" x2="570" y2="170" stroke="#FFD24A" stroke-width="4"/>
+<path d="M560 163 L570 170 L560 177 Z" fill="#FFD24A"/>
+<line x1="1030" y1="170" x2="1090" y2="170" stroke="#FFD24A" stroke-width="4"/>
+<path d="M1080 163 L1090 170 L1080 177 Z" fill="#FFD24A"/>
+<text x="800" y="350" text-anchor="middle" fill="#94A3B8" font-family="Archivo, Arial, 'DejaVu Sans', sans-serif" font-size="26">A posição da ordem dentro do bloco deixa de valer dinheiro: robô nenhum ganha por chegar antes —</text>
+<text x="800" y="385" text-anchor="middle" fill="#94A3B8" font-family="Archivo, Arial, 'DejaVu Sans', sans-serif" font-size="26">nem quem produz o bloco</text>
+</svg>

@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="540" viewBox="0 0 1600 540">
+<rect x="0" y="0" width="1600" height="540" rx="24" fill="#0D1319"/>
+<text x="800" y="70" text-anchor="middle" fill="#94A3B8" font-family="Archivo, Arial, 'DejaVu Sans', sans-serif" font-size="27">Tudo na chain do próprio ativo, sob regras de solvência aplicadas pelo consenso —</text>
+<text x="800" y="106" text-anchor="middle" fill="#94A3B8" font-family="Archivo, Arial, 'DejaVu Sans', sans-serif" font-size="27">e qualquer carteira, de qualquer chain, entra por mensagem</text>
+<rect x="60" y="180" width="250" height="120" rx="18" fill="#141C25" stroke="#263340" stroke-width="2"/>
+<text x="185" y="232" text-anchor="middle" fill="#E2E8F0" font-family="Archivo, Arial, 'DejaVu Sans', sans-serif" font-size="32" font-weight="700">LUNC</text>
+<text x="185" y="270" text-anchor="middle" fill="#94A3B8" font-family="Archivo, Arial, 'DejaVu Sans', sans-serif" font-size="23">em staking</text>
+<rect x="410" y="180" width="270" height="120" rx="18" fill="#141C25" stroke="#263340" stroke-width="2"/>
+<text x="545" y="232" text-anchor="middle" fill="#FFD24A" font-family="Archivo, Arial, 'DejaVu Sans', sans-serif" font-size="32" font-weight="700">stLUNC</text>
+<text x="545" y="270" text-anchor="middle" fill="#94A3B8" font-family="Archivo, Arial, 'DejaVu Sans', sans-serif" font-size="23">líquido, rende, não vota</text>
+<rect x="780" y="180" width="290" height="120" rx="18" fill="#141C25" stroke="#263340" stroke-width="2"/>
+<text x="925" y="232" text-anchor="middle" fill="#E2E8F0" font-family="Archivo, Arial, 'DejaVu Sans', sans-serif" font-size="32" font-weight="700">Colateral</text>
+<text x="925" y="270" text-anchor="middle" fill="#94A3B8" font-family="Archivo, Arial, 'DejaVu Sans', sans-serif" font-size="23">com desconto e tetos</text>
+<rect x="1170" y="180" width="300" height="120" rx="18" fill="#1C1608" stroke="#4A3A10" stroke-width="2"/>
+<text x="1320" y="232" text-anchor="middle" fill="#FFD24A" font-family="Archivo, Arial, 'DejaVu Sans', sans-serif" font-size="32" font-weight="700">Perpétuos</text>
+<text x="1320" y="270" text-anchor="middle" fill="#94A3B8" font-family="Archivo, Arial, 'DejaVu Sans', sans-serif" font-size="23">leilão de preço único</text>
+<line x1="310" y1="240" x2="410" y2="240" stroke="#FFD24A" stroke-width="4"/>
+<path d="M400 233 L410 240 L400 247 Z" fill="#FFD24A"/>
+<line x1="680" y1="240" x2="780" y2="240" stroke="#FFD24A" stroke-width="4"/>
+<path d="M770 233 L780 240 L770 247 Z" fill="#FFD24A"/>
+<line x1="1070" y1="240" x2="1170" y2="240" stroke="#FFD24A" stroke-width="4"/>
+<path d="M1160 233 L1170 240 L1160 247 Z" fill="#FFD24A"/>
+<path d="M1320 300 L1320 410 L545 410 L545 300" fill="none" stroke="#35D999" stroke-width="4"/>
+<path d="M538 310 L545 300 L552 310 Z" fill="#35D999"/>
+<text x="930" y="455" text-anchor="middle" fill="#8BE8C4" font-family="Archivo, Arial, 'DejaVu Sans', sans-serif" font-size="27" font-weight="600">taxas → fundo de seguro → Oracle Pool, Community Pool e queima → mais segurança e rendimento</text>
+<text x="800" y="505" text-anchor="middle" fill="#64748B" font-family="Archivo, Arial, 'DejaVu Sans', sans-serif" font-size="24">Nenhum concorrente pode montar este circuito: nenhum é a casa do LUNC</text>
+</svg>

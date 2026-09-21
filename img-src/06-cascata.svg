@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="540" viewBox="0 0 1600 540">
+<rect x="0" y="0" width="1600" height="540" rx="24" fill="#0D1319"/>
+<rect x="40" y="40" width="340" height="110" rx="16" fill="#141C25" stroke="#263340" stroke-width="2"/>
+<text x="210" y="86" text-anchor="middle" fill="#E2E8F0" font-family="Archivo, Arial, 'DejaVu Sans', sans-serif" font-size="27" font-weight="700">Receita do protocolo</text>
+<text x="210" y="122" text-anchor="middle" fill="#94A3B8" font-family="Archivo, Arial, 'DejaVu Sans', sans-serif" font-size="22">por época, on-chain</text>
+<line x1="380" y1="95" x2="450" y2="95" stroke="#FFD24A" stroke-width="4"/>
+<path d="M440 88 L450 95 L440 102 Z" fill="#FFD24A"/>
+<rect x="450" y="40" width="340" height="110" rx="16" fill="#141C25" stroke="#263340" stroke-width="2"/>
+<text x="620" y="86" text-anchor="middle" fill="#E2E8F0" font-family="Archivo, Arial, 'DejaVu Sans', sans-serif" font-size="27" font-weight="700">1. Fundo de seguro</text>
+<text x="620" y="122" text-anchor="middle" fill="#94A3B8" font-family="Archivo, Arial, 'DejaVu Sans', sans-serif" font-size="22">até a meta — inegociável</text>
+<line x1="790" y1="95" x2="860" y2="95" stroke="#FFD24A" stroke-width="4"/>
+<path d="M850 88 L860 95 L850 102 Z" fill="#FFD24A"/>
+<rect x="860" y="40" width="340" height="110" rx="16" fill="#141C25" stroke="#263340" stroke-width="2"/>
+<text x="1030" y="86" text-anchor="middle" fill="#E2E8F0" font-family="Archivo, Arial, 'DejaVu Sans', sans-serif" font-size="27" font-weight="700">2. Operação</text>
+<text x="1030" y="122" text-anchor="middle" fill="#94A3B8" font-family="Archivo, Arial, 'DejaVu Sans', sans-serif" font-size="22">relayers, oráculo, auditoria</text>
+<line x1="1200" y1="95" x2="1270" y2="95" stroke="#FFD24A" stroke-width="4"/>
+<path d="M1260 88 L1270 95 L1260 102 Z" fill="#FFD24A"/>
+<rect x="1270" y="40" width="290" height="110" rx="16" fill="#1C1608" stroke="#4A3A10" stroke-width="2"/>
+<text x="1415" y="86" text-anchor="middle" fill="#FFD24A" font-family="Archivo, Arial, 'DejaVu Sans', sans-serif" font-size="27" font-weight="700">3. Excedente</text>
+<text x="1415" y="122" text-anchor="middle" fill="#94A3B8" font-family="Archivo, Arial, 'DejaVu Sans', sans-serif" font-size="22">o lucro real</text>
+<line x1="1415" y1="150" x2="1415" y2="195" stroke="#FFD24A" stroke-width="4"/>
+<line x1="310" y1="195" x2="1415" y2="195" stroke="#FFD24A" stroke-width="4"/>
+<line x1="310" y1="195" x2="310" y2="235" stroke="#FFD24A" stroke-width="4"/>
+<path d="M302 225 L310 237 L318 225 Z" fill="#FFD24A"/>
+<line x1="800" y1="195" x2="800" y2="235" stroke="#FFD24A" stroke-width="4"/>
+<path d="M792 225 L800 237 L808 225 Z" fill="#FFD24A"/>
+<line x1="1290" y1="195" x2="1290" y2="235" stroke="#FFD24A" stroke-width="4"/>
+<path d="M1282 225 L1290 237 L1298 225 Z" fill="#FFD24A"/>
+<rect x="80" y="237" width="460" height="180" rx="18" fill="#10241D" stroke="#1E4034" stroke-width="2"/>
+<text x="310" y="310" text-anchor="middle" fill="#8BE8C4" font-family="Archivo, Arial, 'DejaVu Sans', sans-serif" font-size="50" font-weight="700">50%</text>
+<text x="310" y="358" text-anchor="middle" fill="#E2E8F0" font-family="Archivo, Arial, 'DejaVu Sans', sans-serif" font-size="28" font-weight="600">Oracle Pool</text>
+<text x="310" y="395" text-anchor="middle" fill="#94A3B8" font-family="Archivo, Arial, 'DejaVu Sans', sans-serif" font-size="22">reabastecer é urgente: ele paga o staking</text>
+<rect x="580" y="237" width="440" height="180" rx="18" fill="#141C25" stroke="#263340" stroke-width="2"/>
+<text x="800" y="310" text-anchor="middle" fill="#E2E8F0" font-family="Archivo, Arial, 'DejaVu Sans', sans-serif" font-size="50" font-weight="700">20%</text>
+<text x="800" y="358" text-anchor="middle" fill="#E2E8F0" font-family="Archivo, Arial, 'DejaVu Sans', sans-serif" font-size="28" font-weight="600">Community Pool</text>
+<text x="800" y="395" text-anchor="middle" fill="#94A3B8" font-family="Archivo, Arial, 'DejaVu Sans', sans-serif" font-size="22">a governança participa do resultado</text>
+<rect x="1060" y="237" width="460" height="180" rx="18" fill="#241010" stroke="#402020" stroke-width="2"/>
+<text x="1290" y="310" text-anchor="middle" fill="#FF9B7A" font-family="Archivo, Arial, 'DejaVu Sans', sans-serif" font-size="50" font-weight="700">30%</text>
+<text x="1290" y="358" text-anchor="middle" fill="#E2E8F0" font-family="Archivo, Arial, 'DejaVu Sans', sans-serif" font-size="28" font-weight="600">Queima de LUNC</text>
+<text x="1290" y="395" text-anchor="middle" fill="#94A3B8" font-family="Archivo, Arial, 'DejaVu Sans', sans-serif" font-size="22">recompra pelo leilão, visível on-chain</text>
+<text x="800" y="490" text-anchor="middle" fill="#FFD24A" font-family="Archivo, Arial, 'DejaVu Sans', sans-serif" font-size="27" font-weight="600">A queima é paga pelo lucro, nunca pela segurança — e isso é código não governável</text>
+</svg>

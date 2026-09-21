@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="430" viewBox="0 0 1600 430">
+<rect x="0" y="0" width="1600" height="430" rx="24" fill="#0D1319"/>
+<rect x="40" y="40" width="360" height="105" rx="16" fill="#141C25" stroke="#263340" stroke-width="2"/>
+<text x="220" y="84" text-anchor="middle" fill="#E2E8F0" font-family="Archivo, Arial, 'DejaVu Sans', sans-serif" font-size="26" font-weight="600">DEXes da Terra Classic</text>
+<text x="220" y="120" text-anchor="middle" fill="#94A3B8" font-family="Archivo, Arial, 'DejaVu Sans', sans-serif" font-size="22">Terraport, Garuda, Terraswap</text>
+<rect x="440" y="40" width="360" height="105" rx="16" fill="#141C25" stroke="#263340" stroke-width="2"/>
+<text x="620" y="84" text-anchor="middle" fill="#E2E8F0" font-family="Archivo, Arial, 'DejaVu Sans', sans-serif" font-size="26" font-weight="600">Carteiras e DEXes de fora</text>
+<text x="620" y="120" text-anchor="middle" fill="#94A3B8" font-family="Archivo, Arial, 'DejaVu Sans', sans-serif" font-size="22">Solana, BNB Chain, Ethereum</text>
+<rect x="840" y="40" width="330" height="105" rx="16" fill="#141C25" stroke="#263340" stroke-width="2"/>
+<text x="1005" y="84" text-anchor="middle" fill="#E2E8F0" font-family="Archivo, Arial, 'DejaVu Sans', sans-serif" font-size="26" font-weight="600">Bots e terminais</text>
+<text x="1005" y="120" text-anchor="middle" fill="#94A3B8" font-family="Archivo, Arial, 'DejaVu Sans', sans-serif" font-size="22">registro aberto, sem curadoria</text>
+<rect x="1210" y="40" width="350" height="105" rx="16" fill="#10241D" stroke="#1E4034" stroke-width="2"/>
+<text x="1385" y="84" text-anchor="middle" fill="#8BE8C4" font-family="Archivo, Arial, 'DejaVu Sans', sans-serif" font-size="26" font-weight="600">Taxa deles, 100% deles</text>
+<text x="1385" y="120" text-anchor="middle" fill="#94A3B8" font-family="Archivo, Arial, 'DejaVu Sans', sans-serif" font-size="22">capada e aprovada pelo usuário</text>
+<line x1="800" y1="145" x2="800" y2="210" stroke="#FFD24A" stroke-width="5"/>
+<path d="M792 198 L800 210 L808 198 Z" fill="#FFD24A"/>
+<rect x="330" y="210" width="940" height="115" rx="16" fill="#1C1608" stroke="#4A3A10" stroke-width="2"/>
+<text x="800" y="258" text-anchor="middle" fill="#FFD24A" font-family="Archivo, Arial, 'DejaVu Sans', sans-serif" font-size="29" font-weight="700">Terra Classic Liquidity Fabric</text>
+<text x="800" y="298" text-anchor="middle" fill="#94A3B8" font-family="Archivo, Arial, 'DejaVu Sans', sans-serif" font-size="23">execução, liquidez, prova de solvência — e a taxa de protocolo, para a cascata da comunidade</text>
+<text x="800" y="385" text-anchor="middle" fill="#94A3B8" font-family="Archivo, Arial, 'DejaVu Sans', sans-serif" font-size="25">A interface do protocolo faz só custódia e saída: nunca compete com quem distribui</text>
+</svg>

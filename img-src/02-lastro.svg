@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="470" viewBox="0 0 1600 470">
+<rect x="0" y="0" width="1600" height="470" rx="24" fill="#0D1319"/>
+<rect x="50" y="60" width="430" height="190" rx="18" fill="#141C25" stroke="#263340" stroke-width="2"/>
+<text x="265" y="125" text-anchor="middle" fill="#E2E8F0" font-family="Archivo, Arial, 'DejaVu Sans', sans-serif" font-size="31" font-weight="700">LUNC travado aqui</text>
+<text x="265" y="172" text-anchor="middle" fill="#94A3B8" font-family="Archivo, Arial, 'DejaVu Sans', sans-serif" font-size="24">verificado pela própria chain,</text>
+<text x="265" y="206" text-anchor="middle" fill="#94A3B8" font-family="Archivo, Arial, 'DejaVu Sans', sans-serif" font-size="24">a cada bloco, em consenso</text>
+<text x="540" y="170" text-anchor="middle" fill="#FFD24A" font-family="Archivo, Arial, 'DejaVu Sans', sans-serif" font-size="56" font-weight="700">=</text>
+<rect x="600" y="60" width="450" height="190" rx="18" fill="#141C25" stroke="#263340" stroke-width="2"/>
+<text x="825" y="125" text-anchor="middle" fill="#E2E8F0" font-family="Archivo, Arial, 'DejaVu Sans', sans-serif" font-size="31" font-weight="700">Representado lá fora</text>
+<text x="825" y="172" text-anchor="middle" fill="#94A3B8" font-family="Archivo, Arial, 'DejaVu Sans', sans-serif" font-size="24">BNB Chain, Ethereum, Solana —</text>
+<text x="825" y="206" text-anchor="middle" fill="#94A3B8" font-family="Archivo, Arial, 'DejaVu Sans', sans-serif" font-size="24">conferido por observadores abertos</text>
+<text x="1110" y="170" text-anchor="middle" fill="#FFD24A" font-family="Archivo, Arial, 'DejaVu Sans', sans-serif" font-size="56" font-weight="700">+</text>
+<rect x="1170" y="60" width="380" height="190" rx="18" fill="#141C25" stroke="#263340" stroke-width="2"/>
+<text x="1360" y="135" text-anchor="middle" fill="#E2E8F0" font-family="Archivo, Arial, 'DejaVu Sans', sans-serif" font-size="31" font-weight="700">Em trânsito</text>
+<text x="1360" y="185" text-anchor="middle" fill="#94A3B8" font-family="Archivo, Arial, 'DejaVu Sans', sans-serif" font-size="24">nunca se perde, só atrasa</text>
+<rect x="330" y="310" width="940" height="84" rx="16" fill="#10241D" stroke="#1E4034" stroke-width="2"/>
+<text x="800" y="362" text-anchor="middle" fill="#8BE8C4" font-family="Archivo, Arial, 'DejaVu Sans', sans-serif" font-size="28" font-weight="600">Se a conta não fechar, a rota pausa sozinha — no mesmo bloco, sem votação</text>
+<text x="800" y="440" text-anchor="middle" fill="#64748B" font-family="Archivo, Arial, 'DejaVu Sans', sans-serif" font-size="24">Página pública por rede: representado, travado, folga e histórico de pausas — inclusive alarmes falsos</text>
+</svg>
