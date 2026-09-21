@@ -13,7 +13,8 @@
 > **How to read this document.** Sections 1–3 explain *what* and *why* in plain
 > language. Section 4 explains *how it works*. Sections 5–7 cover the business
 > model and where the money goes. Sections 8–11 cover the roadmap, governance,
-> risks and what is being asked. Every diagram is drawn in the text itself
+> risks and what is being asked. Section 13 answers the questions readers ask
+> first. Every diagram is drawn in the text itself
 > (Mermaid), so it renders on GitHub and in any Markdown viewer. A glossary is at
 > the end.
 
@@ -457,6 +458,221 @@ of promises.
 
 ---
 
+## 13. Frequently asked questions
+
+These are the questions that come up first when the proposal is read. Each one
+has a short answer, the detail, and the part that must be said honestly.
+
+### 13.1 Why is liquid staking tied to the perpetuals?
+
+**Short answer:** they do not depend on each other to work, but each makes the
+other much stronger. They are two products that stand alone and form a circuit
+when connected.
+
+```mermaid
+flowchart LR
+    subgraph ALONE["Each stands on its own"]
+        direction TB
+        A1["stLUNC (stage 6)<br/>own revenue: 5 % fee on staking rewards<br/>direct burn active<br/>solves the 21 days of dead capital"]
+        A2["BTC-PERP (stage 9)<br/>launches with USDC collateral only"]
+    end
+    subgraph CIRCUIT["Connected (stage 10, after a real liquidation cycle observed)"]
+        direction LR
+        C1["stLUNC"] -->|"utility: stake keeps earning<br/>while it works as margin"| C2["Perpetuals"]
+        C2 -->|"capital: the chain's largest native<br/>capital stock funds the venue<br/>without leaving staking"| C1
+    end
+    ALONE --> CIRCUIT
+```
+
+**What it is NOT:** a dependency. Liquid staking launches at stage 6, before any
+perpetual, with its own revenue (the 5 % fee on staking rewards) and the direct
+burn active. If the perpetuals never left the drawing board, stLUNC would keep
+delivering value on its own. The reverse also holds: BTC-PERP launches at stage
+9 accepting only USDC as collateral; stLUNC as collateral enters only at stage
+10, after a real liquidation cycle has been observed. The roadmap was designed
+this way on purpose.
+
+**Why they are connected — the circuit creates value in both directions:**
+
+- *The perpetual gives stLUNC utility.* A liquid-staking token is only worth
+  something if there is somewhere to use it. Serving as collateral is the
+  strongest use there is: the stake keeps earning staking rewards while it works
+  as margin. No CEX offers that for LUNC — there, to trade you redeem and stop
+  earning.
+- *stLUNC gives the perpetual capital.* The chain's largest stock of native
+  capital is delegated LUNC. Without stLUNC, the only collateral is outside
+  USDC, which has to be attracted. With stLUNC, capital that already exists on
+  the chain can fund the venue without leaving staking.
+- *The security detail that ties it together:* because the collateral is liquid
+  stake (not loose LUNC), using the venue never requires undoing a delegation.
+  The perpetual does not drain consensus security — it reinforces it, by adding
+  one more reason to delegate.
+
+**Why the link is restricted — the honest part.** stLUNC as collateral carries a
+classic risk, *wrong-way risk*: if LUNC falls, the value of the collateral falls
+at exactly the moment the position may be losing. Hence the hard rules of
+decision D-16:
+
+| Rule (D-16) | Value |
+|---|---|
+| Markets stLUNC may collateralize | BTC and ETH only — **never LUNC-PERP** (collateral and asset falling together would be the perfect trap) |
+| Haircut on stLUNC value | 35 % |
+| Cap per account | 50 % of the account's collateral |
+| Insurance fund | separate tranche for stLUNC-backed positions |
+
+**The technical link that explains a decision.** The reason liquid staking is a
+native module (and not the contract LSTs that already exist) comes precisely from
+the perpetual: the liquidation path must seize and price the collateral with no
+third-party contract or admin key in between. The perpetual did not create the
+need for liquid staking; it defined how liquid staking must be built so the two
+can connect safely later.
+
+*An analogy:* stLUNC is a term deposit that keeps paying interest; the perpetual
+is the bank that accepts that deposit as margin without you cashing it out. The
+bank works without accepting deposits, and the deposit pays without any bank —
+but together, the money works twice.
+
+### 13.2 Who funds the liquidity for withdrawals? Does the community need to put money in?
+
+**Short answer:** nobody needs to fund it, and the community puts in nothing —
+because none of the three kinds of withdrawal in the system depends on a
+liquidity pool. The budget this proposal asks for is for engineering and audits,
+not for liquidity.
+
+```mermaid
+flowchart TB
+    subgraph W1["1 · stLUNC → LUNC"]
+        direction TB
+        R1["Redeem = the chain's normal unbonding<br/>your own LUNC was delegated the whole time"]
+        R1 --> R2["~24 days: processing epoch + 21-day unbonding"]
+        R1 --> R3["Small redemptions: ~2 % undelegated buffer<br/>formed by the deposits themselves"]
+        R1 --> R4["In a hurry: sell stLUNC on a DEX<br/>(voluntary LPs, arbitrage closes the discount)"]
+    end
+    subgraph W2["2 · Bridge withdrawals"]
+        direction TB
+        B1["Lock-and-mint: every wrapped LUNC<br/>has LUNC locked here (checked every block)"]
+        B1 --> B2["Withdraw = burn the wrapper,<br/>release what was already locked"]
+    end
+    subgraph W3["3 · USDC from perpetuals"]
+        direction TB
+        U1["Collateral is the user's own,<br/>segregated in their account"]
+        U1 --> U2["Withdraw = return what is theirs<br/>through the route back"]
+        U1 --> U3["What needs protection is solvency<br/>of the whole: insurance fund<br/>(fed by protocol fees), then ADL"]
+    end
+```
+
+**1. Redeeming stLUNC for LUNC (the liquid-staking case).** The redemption is
+not a swap — it is the chain's normal staking unbonding. Each stLUNC corresponds,
+by construction, to LUNC actually delegated plus accumulated rewards; the module
+does not lend, rent or rehypothecate anything. When you redeem, the module
+enters the staking module's own unbonding queue and, after about 24 days (the
+processing epoch plus the chain's 21-day unbonding), your own LUNC, which was
+delegated the whole time, comes back to you. There is no liquidity to fund
+because the money never left — the waiting time is precisely the proof. A
+redemption that was instant and unlimited is what should be frightening: it would
+mean the backing is not really staked.
+
+Three honest complements: (a) a buffer of about 2 % of deposits stays
+undelegated to serve small redemptions immediately — formed by the deposits
+themselves, not by any contribution; (b) whoever does not want to wait 24 days
+sells stLUNC on the secondary market (pools on the chain's DEXes — more revenue
+for them), where the liquidity comes from voluntary LPs with an economic
+incentive: if stLUNC trades below redemption value, arbitrageurs buy at a
+discount and redeem through the slow path, and their profit is what pulls the
+price back; (c) in a market panic the secondary discount can widen — an
+immediate exit may be expensive, but full redemption through the slow path
+remains guaranteed by the backing, always.
+
+**2. Bridge withdrawals.** Lock-and-mint model: every LUNC represented outside
+has LUNC locked here (the invariant the chain checks every block). Withdrawing
+is burning the representation and releasing what was already locked. No pool,
+no contribution — backing.
+
+**3. USDC withdrawals from the perpetuals.** The collateral belongs to the user,
+segregated in their account; withdrawing is returning what is theirs through the
+route back. What needs protection is not the withdrawal but the solvency of the
+whole (one trader's gain is paid by another's loss), and that is the role of the
+insurance fund, fed by the protocol fee (the first step of the waterfall, before
+Oracle Pool, Community Pool and burn), not by contributions. Launch starts with
+low position caps precisely so the fund requirement is small at first and grows
+with revenue. If the fund were exhausted in an extreme event, the final backstop
+is ADL (auto-deleveraging) — a pre-published, deterministic rule — and never a
+capital call to the community.
+
+**The political question, answered directly.** Market liquidity (LPs in the
+stLUNC secondary market, market makers in the perpetuals) comes from
+participants with their own profit motive — which is why the gate of three
+market-maker letters exists before any perpetual: the project does not launch
+counting on liquidity that has not committed in writing. If one day the
+community wants to accelerate with LP incentives, that would be a separate,
+optional proposal — the design works without it.
+
+**And if everyone withdraws at the same time?** stLUNC: everyone enters the
+unbonding queue and everyone receives their own LUNC after the waiting period;
+the secondary price may fall meanwhile, the backing does not. Bridge: every
+wrapper burns against LUNC already locked, one for one. Perpetuals: each
+account withdraws its own segregated collateral; open positions are governed by
+the published risk rules.
+
+### 13.3 Perpetuals — are we talking about leverage or not?
+
+**Short answer:** yes. Leverage is the heart of the product, and this proposal
+says so plainly. What it also says: leverage here is a dial, limited in code to
+conservative levels, with the stop written on-chain and liquidation by a
+published rule.
+
+**What a perpetual is.** A contract in which you take a position on the price of
+an asset (BTC, ETH) without ever owning it, with no expiry date, depositing only
+a margin — and that is where leverage comes in: the position can be larger than
+the margin. With 100 USDC of margin at 2×, you control a 200 USDC position. If
+BTC rises 5 %, you gain 10 USDC — 10 % on your capital; if it falls 5 %, you lose
+the same 10. Leverage multiplies both sides. The "perpetual" in the name comes
+from never expiring: instead of a dated futures contract there is *funding* — a
+periodic payment between longs and shorts that keeps the contract price glued to
+the spot price. And if the market moves against you beyond what the margin can
+absorb, *liquidation* closes the position by force before the loss exceeds the
+deposit — that is what the insurance fund, ADL and the whole risk apparatus of
+the specification exist to manage.
+
+**Leverage is a dial, not an obligation.** Trading at 1× — position equal to
+margin — is possible and is simply price exposure with no multiplier. The design
+is deliberately conservative on the dial:
+
+| Market | Leverage at launch | Absolute cap (in code, non-governable) |
+|---|---|---|
+| BTC-PERP, ETH-PERP | 3× | 10× |
+| LUNC-PERP (last market) | 2× | 10× |
+| Industry reference | 50×, 100× or more | — |
+
+This is an identity decision: on a chain whose biography is a collapse, a 100×
+casino would be narrative suicide. The selling point was never "leverage more";
+it is "trade where solvency is proven".
+
+**Why have leverage at all, and not just spot?** Three reasons:
+
+1. **Hedging** — the most defensible use: whoever holds LUNC or BTC and fears a
+   fall can protect themselves short without selling the asset (and here,
+   without even undoing the staking). That only exists with a derivative.
+2. **Capital efficiency** — a market maker providing liquidity on margin can
+   quote far more with the same capital; without it there is no competitive
+   liquidity.
+3. **The cold fact of the market** — perpetuals are where real on-chain volume
+   is; it is the product that brings integrators and traders, and volume is what
+   feeds the waterfall (Oracle Pool, Community Pool, burn).
+
+**Spot in the same engine.** A spot market is the same auction with no leverage:
+you deposit the full amount and exchange the full asset. That is why spot became
+an "optional market type" — it is the special case of the engine with the dial at
+zero. The perpetual is the general case, with margin.
+
+**The honest sentence for the floor:** yes, it is leverage — limited in code to
+conservative levels, with the stop written on-chain, liquidation by a published
+rule and never above what the real depth of the market supports. Leverage
+without those limits is what breaks protocols; leverage with those limits is
+what pays the burn.
+
+---
+
 ## Closing
 
 > **The chain that fell because of backing no one could see will become the
@@ -488,6 +704,14 @@ chain and verify every number — and that is exactly the proposal.
 | **TVL** | Total value locked in a protocol or chain |
 | **LST** | Liquid-staking token (e.g. Eris's) |
 | **Market maker** | A firm that continuously quotes buy and sell prices, providing liquidity |
+| **Leverage** | Holding a position larger than the margin deposited; multiplies gains and losses alike |
+| **Margin** | The collateral deposited to open and keep a leveraged position |
+| **Funding** | Periodic payment between longs and shorts that keeps a perpetual's price aligned with spot |
+| **Liquidation** | Forced closing of a position when losses approach the deposited margin |
+| **ADL (auto-deleveraging)** | Last-resort, pre-published rule that reduces winning positions if the insurance fund is exhausted; never a capital call |
+| **Wrong-way risk** | When the collateral loses value at the same time the position it backs is losing (e.g. LUNC collateral on a LUNC market) |
+| **Unbonding** | The 21-day waiting period to withdraw staked LUNC on Terra Classic |
+| **Lock-and-mint** | Bridge model where every token issued on another chain has the same amount locked on the origin chain |
 
 ## Diagrams
 

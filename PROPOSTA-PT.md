@@ -174,6 +174,217 @@ A camada de perpétuos **volta ao plenário** com seus próprios portões cumpri
 
 ---
 
+## 12. Perguntas frequentes
+
+São as perguntas que aparecem primeiro quando a proposta é lida. Cada uma tem a
+resposta curta, o detalhe e a parte que precisa ser dita com honestidade.
+
+### 12.1 Por que o staking líquido está ligado ao perpétuo?
+
+**Resposta curta:** eles não dependem um do outro para funcionar, mas um torna o
+outro muito mais forte. São dois produtos que param em pé sozinhos e formam um
+circuito quando conectados.
+
+```mermaid
+flowchart LR
+    subgraph ALONE["Cada um para em pé sozinho"]
+        direction TB
+        A1["stLUNC (etapa 6)<br/>receita própria: taxa de 5 % sobre as recompensas<br/>queima direta ativa<br/>resolve os 21 dias de capital morto"]
+        A2["BTC-PERP (etapa 9)<br/>lança aceitando só USDC como garantia"]
+    end
+    subgraph CIRCUIT["Conectados (etapa 10, após um ciclo real de liquidação observado)"]
+        direction LR
+        C1["stLUNC"] -->|"utilidade: o stake continua rendendo<br/>enquanto trabalha como margem"| C2["Perpétuos"]
+        C2 -->|"capital: o maior estoque nativo da chain<br/>financia o venue sem sair do staking"| C1
+    end
+    ALONE --> CIRCUIT
+```
+
+**O que NÃO é:** dependência. O staking líquido lança na etapa 6, antes de
+qualquer perpétuo, com receita própria (a taxa de 5 % sobre as recompensas) e a
+queima direta ativa. Se os perpétuos nunca saíssem do papel, o stLUNC continuaria
+entregando valor sozinho. O inverso também vale: o BTC-PERP lança na etapa 9
+aceitando só USDC como garantia; o stLUNC como colateral só entra na etapa 10,
+depois de um ciclo real de liquidação observado. O roadmap foi desenhado assim de
+propósito.
+
+**Por que estão ligados — o circuito cria valor nos dois sentidos:**
+
+- *O perpétuo dá utilidade ao stLUNC.* Um token de staking líquido só vale algo
+  se tiver onde ser usado. Servir de garantia é o uso mais forte que existe: o
+  stake continua rendendo enquanto trabalha como margem. Nenhuma CEX oferece isso
+  para LUNC — lá, para operar, você resgata e para de render.
+- *O stLUNC dá capital ao perpétuo.* O maior estoque de capital nativo da chain é
+  o LUNC delegado. Sem stLUNC, a única garantia é USDC de fora, que precisa ser
+  atraído. Com stLUNC, o capital que já existe na chain financia o venue sem sair
+  do staking.
+- *O detalhe de segurança que amarra tudo:* como a garantia é o stake líquido (e
+  não LUNC solto), usar o venue nunca exige desfazer delegação. O perpétuo não
+  drena a segurança do consenso — reforça, porque cria mais um motivo para
+  delegar.
+
+**Por que a ligação é restrita — a parte honesta.** stLUNC como garantia tem um
+risco clássico, o *wrong-way risk*: se o LUNC cai, o valor da garantia cai junto,
+exatamente na hora em que a posição pode estar perdendo. Por isso as regras duras
+da decisão D-16:
+
+| Regra (D-16) | Valor |
+|---|---|
+| Mercados que o stLUNC pode garantir | BTC e ETH apenas — **nunca o LUNC-PERP** (garantia e ativo caindo juntos seria a armadilha perfeita) |
+| Desconto (haircut) sobre o valor do stLUNC | 35 % |
+| Teto por conta | 50 % da garantia da conta |
+| Fundo de seguro | tranche separada para posições garantidas por stLUNC |
+
+**A ligação técnica que explica uma decisão.** A razão de o staking líquido ser
+um módulo nativo (e não usar os LSTs de contrato que já existem) vem justamente do
+perpétuo: o caminho de liquidação precisa apreender e precificar a garantia sem
+nenhum contrato de terceiro ou chave de admin no meio. O perpétuo não criou a
+necessidade do staking líquido; ele definiu como o staking líquido precisa ser
+construído para que os dois possam se conectar com segurança depois.
+
+*Uma analogia:* o stLUNC é o CDB que continua rendendo; o perpétuo é o banco que
+aceita esse CDB como margem sem você precisar resgatar. O banco funciona sem
+aceitar CDB, e o CDB rende sem banco nenhum — mas juntos, o dinheiro trabalha
+duas vezes.
+
+### 12.2 Quem banca a liquidez para os saques? A comunidade vai precisar dar um aporte?
+
+**Resposta curta:** ninguém precisa bancar, e a comunidade não aporta nada —
+porque nenhum dos três tipos de saque do sistema depende de uma piscina de
+liquidez. O orçamento que a proposta pede é para engenharia e auditoria, não
+para liquidez.
+
+```mermaid
+flowchart TB
+    subgraph W1["1 · stLUNC → LUNC"]
+        direction TB
+        R1["Resgate = o unbonding normal da chain<br/>o seu LUNC esteve delegado o tempo todo"]
+        R1 --> R2["~24 dias: época de processamento + 21 dias de unbonding"]
+        R1 --> R3["Resgates pequenos: buffer de ~2 % sem delegar<br/>formado pelos próprios depósitos"]
+        R1 --> R4["Com pressa: vender stLUNC numa DEX<br/>(LPs voluntários, arbitragem fecha o desconto)"]
+    end
+    subgraph W2["2 · Saques pela ponte"]
+        direction TB
+        B1["Trava-e-emite: todo LUNC representado lá fora<br/>tem LUNC travado aqui (verificado a cada bloco)"]
+        B1 --> B2["Sacar = queimar a representação<br/>e liberar o que já estava travado"]
+    end
+    subgraph W3["3 · USDC dos perpétuos"]
+        direction TB
+        U1["O colateral é do próprio usuário,<br/>segregado na conta dele"]
+        U1 --> U2["Sacar = devolver o que é dele<br/>pela rota de volta"]
+        U1 --> U3["O que precisa de proteção é a solvência<br/>do conjunto: fundo de seguro<br/>(alimentado pela taxa), depois ADL"]
+    end
+```
+
+**1. Resgate de stLUNC → LUNC.** O resgate não é um swap — é o unbonding normal
+do staking da chain. Cada stLUNC corresponde, por construção, a LUNC realmente
+delegado mais as recompensas acumuladas; o módulo não empresta, não aluga e não
+rehipoteca nada. Ao resgatar, o módulo entra na fila de unbonding do próprio
+staking module e, depois de ~24 dias (a época de processamento + os 21 dias de
+unbonding), o seu próprio LUNC, que estava delegado o tempo todo, volta para
+você. Não existe liquidez a ser bancada porque o dinheiro nunca saiu do lugar —
+o tempo de espera é justamente a prova disso. Um resgate instantâneo e ilimitado
+é que deveria assustar: significaria que o lastro não está em staking de verdade.
+
+Três complementos honestos: (a) um buffer de ~2 % dos depósitos fica sem delegar
+para atender resgates pequenos na hora — formado pelos próprios depósitos, não
+por aporte; (b) quem não quer esperar 24 dias vende o stLUNC no mercado
+secundário (pools nas DEXes da chain — mais receita para elas), onde a liquidez
+é de LPs voluntários com incentivo econômico: se o stLUNC negociar abaixo do
+valor de resgate, arbitradores compram com desconto e resgatam pelo caminho
+lento, e esse lucro é o que puxa o preço de volta; (c) em pânico de mercado, o
+desconto no secundário pode abrir — a saída imediata pode custar caro, mas o
+resgate integral pelo caminho lento continua garantido pelo lastro, sempre.
+
+**2. Saques pela ponte.** Modelo trava-e-emite: todo LUNC representado lá fora
+tem LUNC travado aqui (a invariante que a chain verifica a cada bloco). Sacar é
+queimar a representação e liberar o que já estava travado. Não há pool, não há
+aporte — há lastro.
+
+**3. Saques de USDC dos perpétuos.** O colateral é do próprio usuário, segregado
+na conta dele; sacar é devolver o que é dele pela rota de volta. O que precisa
+de proteção não é o saque — é a solvência do conjunto (o ganho de um trader é
+pago pela perda de outro), e isso é papel do fundo de seguro, alimentado pela
+taxa do protocolo (o primeiro degrau da cascata, antes de Oracle Pool, Community
+Pool e queima), não por aporte. O lançamento começa com tetos de posição baixos
+exatamente para que a exigência do fundo seja pequena no início e cresça com a
+receita. Se o fundo se esgotar num evento extremo, o backstop final é o ADL —
+regra pré-publicada e determinística — e nunca um chamado de capital à
+comunidade.
+
+**A pergunta política, respondida diretamente.** A liquidez de mercado (LPs no
+secundário do stLUNC, formadores de mercado nos perpétuos) vem de participantes
+com lucro próprio — e é por isso que existe o portão das três cartas de
+formadores de mercado antes de qualquer perpétuo: o projeto não lança contando
+com liquidez que não se comprometeu por escrito. Se um dia a comunidade quiser
+acelerar com incentivos de LP, isso seria uma proposta separada e opcional — o
+desenho funciona sem.
+
+**E se todo mundo sacar ao mesmo tempo?** stLUNC: todos entram na fila de
+unbonding e todos recebem o próprio LUNC após o prazo; o preço no secundário
+pode cair nesse meio-tempo, o lastro não. Ponte: cada representação queima
+contra LUNC já travado, um para um. Perpétuos: cada conta saca o próprio
+colateral segregado; posições abertas seguem as regras de risco publicadas.
+
+### 12.3 Perpétuos — estamos falando de alavancagem ou não?
+
+**Resposta curta:** sim. Alavancagem é o coração do produto, e esta proposta diz
+isso com clareza. O que ela também diz: aqui a alavancagem é um dial, limitada
+em código a níveis conservadores, com stop gravado na chain e liquidação por
+regra publicada.
+
+**O que é um perpétuo.** Um contrato em que você toma posição no preço de um
+ativo (BTC, ETH) sem nunca possuí-lo, sem prazo de vencimento, depositando só
+uma margem — e é aí que entra a alavancagem: a posição pode ser maior que a
+margem. Com 100 USDC de margem a 2×, você controla uma posição de 200 USDC. Se o
+BTC sobe 5 %, você ganha 10 USDC — 10 % sobre o seu capital; se cai 5 %, perde os
+mesmos 10. A alavancagem multiplica os dois lados. O "perpétuo" do nome vem de
+não vencer nunca: em vez de um futuro com data, existe o *funding* — um
+pagamento periódico entre comprados e vendidos que mantém o preço do contrato
+colado ao preço à vista. E se o mercado anda contra você além do que a margem
+aguenta, a *liquidação* fecha a posição à força antes que a perda supere o
+depósito — é isso que o fundo de seguro, o ADL e todo o aparato de risco da
+especificação existem para administrar.
+
+**Alavancagem é um dial, não uma obrigação.** Operar a 1× — posição igual à
+margem — é possível e é simplesmente exposição ao preço sem multiplicador. O
+desenho é deliberadamente conservador no dial:
+
+| Mercado | Alavancagem no lançamento | Teto absoluto (em código, não governável) |
+|---|---|---|
+| BTC-PERP, ETH-PERP | 3× | 10× |
+| LUNC-PERP (último mercado) | 2× | 10× |
+| Referência da indústria | 50×, 100× ou mais | — |
+
+É uma decisão de identidade: numa chain cuja biografia é o colapso, um cassino
+de 100× seria suicídio narrativo. O argumento de venda nunca foi "alavanque
+mais"; é "opere onde a solvência se prova".
+
+**Por que ter alavancagem, e não só spot?** Três razões:
+
+1. **Hedge** — o uso mais defensável: quem tem LUNC ou BTC e teme uma queda pode
+   se proteger vendido sem vender o ativo (e aqui, sem nem desfazer o staking).
+   Isso só existe com derivativo.
+2. **Eficiência de capital** — o formador de mercado que provê liquidez com
+   margem cota muito mais com o mesmo capital; sem isso, não há liquidez
+   competitiva.
+3. **O fato frio do mercado** — perpétuos são onde está o volume on-chain de
+   verdade; é o produto pelo qual integradores e traders aparecem, e o volume é
+   o que alimenta a cascata (Oracle Pool, Community Pool, queima).
+
+**Spot no mesmo motor.** Mercado spot é o mesmo leilão sem alavancagem: você
+deposita o valor inteiro e troca o ativo inteiro. Por isso o spot virou "tipo de
+mercado opcional" — é o caso particular do motor com o dial em zero. O perpétuo
+é o caso geral, com margem.
+
+**A frase honesta para o plenário:** sim, é alavancagem — limitada em código a
+níveis conservadores, com stop gravado na chain, liquidação por regra publicada
+e nunca acima do que a profundidade real do mercado suporta. Alavancagem sem
+esses limites é o que quebra protocolos; alavancagem com esses limites é o que
+paga a queima.
+
+---
+
 ## Encerramento
 
 > **A chain que caiu pelo lastro que não se via será a referência do lastro que se prova.**
