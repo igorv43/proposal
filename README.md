@@ -1,198 +1,496 @@
 # Terra Classic Liquidity Fabric
-## Proposta à comunidade, aos validadores e a investidores
 
-**Versão:** 1.1 — setembro de 2026 (diagramas em imagem; os arquivos-fonte em SVG estão em [`img-src/`](img-src/))
-**Base técnica:** Especificação v0.8.1, com decisões registradas (D-01 a D-22) e verificações públicas (G-01 a G-11)
-**Discussão:** [Issues deste repositório](https://github.com/igorv43/proposal/issues)
+## A proposal to the community, validators and investors
 
----
-
-## Resumo em cinco linhas
-
-Propomos transformar a Terra Classic em **infraestrutura financeira multichain**: staking líquido nativo, mercados perpétuos executados por leilão de preço único, e acesso por qualquer carteira de qualquer chain com uma assinatura — tudo sob uma regra que nenhum concorrente pode copiar: **o lastro e a solvência se provam em consenso, a cada bloco, em vez de se prometer em documentação**. As interfaces pertencem às DEXes e carteiras que integrarem, cobrando a taxa delas; a chain fica com a taxa de protocolo, cuja sobra alimenta **50% o Oracle Pool, 20% o Community Pool e 30% a queima de LUNC**. Este pedido cobre apenas a fundação e o staking líquido; a camada de perpétuos volta ao plenário com seus próprios portões cumpridos.
-
----
-
-## 1. A identidade do projeto
-
-**A chain fornece a infraestrutura. As interfaces pertencem a quem integra.**
-
-O Liquidity Fabric não é um app, não é uma DEX, não é mais um site. É a camada de ativos, contas, execução, colateral e prova que os aplicativos de todas as chains usam — e pela qual pagam. Quem busca o cliente e faz o marketing são as plataformas que já têm usuários: as DEXes da própria Terra Classic e as carteiras e DEXes de Solana, BNB Chain e Ethereum.
-
-E a tese que atravessa tudo: **lastro que se prova, não se promete.** A Terra Classic é a chain cujo colapso ensinou ao setor inteiro o custo de um lastro que não se podia verificar. Este projeto é a inversão exata disso — e nenhum concorrente conta essa história com credibilidade, porque nenhum a viveu.
-
----
-
-## 2. As quatro dores de hoje
-
-| Dor | Quem sente |
+| | |
 |---|---|
-| **Capital em staking é capital morto.** 21 dias de unbonding; quem faz staking não usa o próprio dinheiro para nada | Todo delegador de LUNC |
-| **Não existem derivativos nativos.** Hedge e alavancagem sobre LUNC só em CEX ou em outra chain — o volume vai embora com o usuário | Traders e a própria chain |
-| **Entrar é difícil.** Quem está em Solana, BNB Chain ou Ethereum precisa de ponte, carteira nova e gas novo antes da primeira transação | Todo usuário de fora |
-| **O LUNC está fragmentado lá fora.** Representações diferentes em cada rede, sem contabilidade pública que prove o lastro de cada uma | Quem detém LUNC fora da chain |
+| **Version** | 1.1 — September 2026 |
+| **Technical basis** | Specification v0.8.1, with recorded decisions (D-01 to D-22) and public verifications (G-01 to G-11) |
+| **Discussion** | [Issues of this repository](https://github.com/igorv43/proposal/issues) |
+| **Author** | Igor Veras — [GitHub](https://github.com/igorv43) · [X](https://x.com/igorsoares62) |
+| **Portuguese version** | [PROPOSTA-PT.md](PROPOSTA-PT.md) |
 
-Contexto de escala: o TVL DeFi somado da chain está na casa de **US$ 850 mil**, com volume diário de DEX de poucos milhares de dólares (DefiLlama, set/2026). Este projeto não disputa essa fatia — ele cria uma camada que hoje é aproximadamente zero: derivativos e acesso multichain.
+> **How to read this document.** Sections 1–3 explain *what* and *why* in plain
+> language. Section 4 explains *how it works*. Sections 5–7 cover the business
+> model and where the money goes. Sections 8–11 cover the roadmap, governance,
+> risks and what is being asked. Every diagram is drawn in the text itself
+> (Mermaid), so it renders on GitHub and in any Markdown viewer. A glossary is at
+> the end.
 
 ---
 
-## 3. O que será construído
+## Summary in five lines
 
-![O circuito produtivo do stake: LUNC vira stLUNC, que vira colateral dos perpétuos; as taxas alimentam fundo, Oracle Pool, Community Pool e queima](img/01-circuito.png)
+We propose turning Terra Classic into **multichain financial infrastructure**:
+native liquid staking, perpetual markets executed by single-price auction, and
+access from any wallet on any chain with one signature — all under a rule no
+competitor can copy: **backing and solvency are proven in consensus, every
+block, instead of promised in documentation.** The user interfaces belong to the
+DEXes and wallets that integrate, charging their own fee; the chain keeps the
+protocol fee, whose surplus feeds **50 % the Oracle Pool, 20 % the Community
+Pool and 30 % LUNC burn**. This request covers only the foundation and liquid
+staking; the perpetuals layer returns to the floor with its own gates met.
 
-Seis camadas, um produto:
+### The whole idea in one picture
 
-| Camada | O que entrega |
+```mermaid
+flowchart LR
+    LUNC["LUNC<br/>staked"] -->|liquid staking| ST["stLUNC<br/>liquid · yields · never votes"]
+    ST -->|used as| COL["Collateral<br/>with haircut and caps"]
+    COL -->|backs| PERP["Perpetuals<br/>single-price auction"]
+    PERP -->|fees| FUND["Insurance fund<br/>(filled first, up to target)"]
+    FUND -->|surplus| SPLIT{"Surplus split"}
+    SPLIT -->|50 %| OP["Oracle Pool<br/>validator rewards"]
+    SPLIT -->|20 %| CP["Community Pool"]
+    SPLIT -->|30 %| BURN["LUNC burn"]
+    OP -.->|more security and yield| LUNC
+    ANY["Any wallet on<br/>Solana · BNB Chain · Ethereum"] -->|one signature| ST
+```
+
+*Everything runs on the asset's own chain, under solvency rules enforced by
+consensus. No competitor can assemble this circuit: none of them is the home of
+LUNC.*
+
+---
+
+## 1. The identity of the project
+
+**The chain provides the infrastructure. The interfaces belong to whoever integrates.**
+
+The Liquidity Fabric is not an app, not a DEX, not another website. It is the
+layer of assets, accounts, execution, collateral and proof that applications on
+every chain use — and pay for. The ones who find the customer and do the
+marketing are the platforms that already have users: Terra Classic's own DEXes,
+and the wallets and DEXes of Solana, BNB Chain and Ethereum.
+
+And the thesis that runs through everything: **backing that is proven, not
+promised.** Terra Classic is the chain whose collapse taught the whole industry
+the cost of backing that could not be verified. This project is the exact
+inversion of that — and no competitor can tell this story with credibility,
+because none of them lived it.
+
+---
+
+## 2. The four pains of today
+
+| Pain | Who feels it |
 |---|---|
-| **Ativos multichain** | LUNC canônico, com representação auditável em cada rede |
-| **Contas multichain** | Qualquer carteira opera com uma assinatura, sem ponte manual |
-| **Confiança** | Lastro verificado em consenso a cada bloco, com pausa automática |
-| **Execução** | Leilão de preço único e perpétuos com proteções gravadas na chain |
-| **Capital nativo** | stLUNC como colateral neutro, que nunca vota por ninguém |
-| **Distribuição** | DEXes e carteiras integram, cobram a taxa delas e trazem o cliente |
+| **Staked capital is dead capital.** 21 days of unbonding; stakers cannot use their own money for anything | Every LUNC delegator |
+| **No native derivatives.** Hedging and leverage on LUNC only on CEXes or other chains — the volume leaves with the user | Traders and the chain itself |
+| **Getting in is hard.** A user on Solana, BNB Chain or Ethereum needs a bridge, a new wallet and new gas before the first transaction | Every outside user |
+| **LUNC is fragmented out there.** Different representations on each network, with no public accounting proving the backing of each | Everyone holding LUNC off-chain |
+
+Scale context: the chain's combined DeFi TVL is around **US$ 850 thousand**, with
+daily DEX volume of a few thousand dollars (DefiLlama, Sep 2026). This project
+does not compete for that slice — it creates a layer that is approximately zero
+today: derivatives and multichain access.
+
+```mermaid
+flowchart TB
+    subgraph TODAY["Today"]
+        direction LR
+        T1["Staked LUNC<br/>locked 21 days"]
+        T2["Hedge / leverage<br/>only on CEX or other chains"]
+        T3["Outside user needs<br/>bridge + wallet + gas"]
+        T4["Wrapped LUNC on each network<br/>with no proof of backing"]
+    end
+    subgraph FABRIC["With the Fabric"]
+        direction LR
+        F1["stLUNC: liquid,<br/>usable as collateral"]
+        F2["Native perpetuals<br/>on Terra Classic"]
+        F3["One signature from<br/>the user's own wallet"]
+        F4["Canonical LUNC with<br/>backing proven every block"]
+    end
+    T1 --> F1
+    T2 --> F2
+    T3 --> F3
+    T4 --> F4
+```
 
 ---
 
-## 4. Como funciona, sem jargão
+## 3. What will be built
 
-### 4.1 Lastro que se prova
+Six layers, one product:
 
-![A equação do lastro: LUNC travado aqui = representado lá fora + em trânsito; se a conta não fechar, a rota pausa sozinha](img/02-lastro.png)
-
-A página de solvência é pública: qualquer pessoa consulta, por rede, quanto está representado, quanto está travado, a folga contra o teto e o histórico de pausas — **inclusive os alarmes falsos**, porque um registro que só mostra acertos não é um registro. O software do observador é aberto: "qualquer um pode verificar" só vale se qualquer um conseguir.
-
-### 4.2 Um preço para todos
-
-![O leilão em três etapas: coleta, lances selados e execução ao preço único](img/03-leilao.png)
-
-A posição da ordem dentro do bloco deixa de valer dinheiro: robô nenhum ganha por chegar antes — nem quem produz o bloco. O mesmo motor executa os perpétuos e qualquer mercado spot que a governança queira habilitar depois, sem código novo.
-
-### 4.3 A conta vai até o usuário
-
-![Acesso multichain: carteiras de Solana, BNB Chain e Ethereum assinam uma vez e a conta opera local na Terra Classic](img/04-acesso.png)
-
-O usuário não sabe que existe uma ponte — e não precisa saber. Cada carteira integrada em outra rede vira um canal de entrada para a Terra Classic.
-
-### 4.4 A proteção mora na chain, não no navegador
-
-- **Stop e alvo gravados na chain:** disparam sozinhos, mesmo com o investidor offline, sem internet, com o app fechado.
-- **Saque com destino travado:** fundos só saem para a carteira do próprio dono. Nem uma mensagem forjada na ponte consegue roubar — comprometimento de ponte vira incômodo, não perda.
-- **Atraso nunca vira perda:** mensagem lenta fica pendente até chegar, e qualquer pessoa pode entregá-la, inclusive o próprio usuário, pelo botão de reentrega.
-- **Teto pela liquidez real:** nenhum mercado pode crescer além da profundidade medida por oráculo — a regra que impede a classe de ataque que constrangeu o líder do setor. E o LUNC-PERP será o **último** mercado, com os parâmetros mais restritivos, não o primeiro.
-- **As ordens nunca passam pela ponte:** congestionamento de ponte não atrasa um único trade.
-- E a honestidade obrigatória: **risco de mercado não é reversível** — nenhuma venue do mundo reverte movimento de preço, e esta proposta não dirá o contrário. O que garantimos é que atraso nunca vira perda de principal e que a defesa da posição não depende de reflexo humano.
-
----
-
-## 5. O modelo de negócio: eles vendem, a chain fatura
-
-![Modelo de integradores: DEXes, carteiras e bots cobram a taxa deles por cima; a chain recebe a taxa de protocolo](img/05-integradores.png)
-
-O precedente do setor valida o modelo: o líder de perpétuos on-chain terceirizou a distribuição a mais de cem integradores; a carteira Phantom, de Solana, roteou dezenas de bilhões de dólares e faturou mais de US$ 20 milhões em cerca de um ano cobrando 0,05% por cima — sem construir exchange (fontes: relatórios públicos do programa de builder codes — CoinGecko Research, Blockworks, 2026).
-
-E a regra que garante que nunca competiremos com quem nos distribui, escrita em código: **a interface do próprio protocolo faz apenas custódia, prova de solvência e saída** — fechar posição, cancelar, sacar. Abrir posição não existe nela. Sem abertura, ela não disputa um único trade; com saída garantida, nenhum usuário jamais fica preso a uma interface de terceiro para escapar de uma posição.
-
-O lançamento dos perpétuos exige **pelo menos dois integradores em produção** — sem interfaces, não há produto, e o portão torna isso literal. O kit de integração (template, widget, SDK e sandbox) é aberto e reduz o custo de integrar a dias.
-
----
-
-## 6. Quem já constrói aqui sai ganhando
-
-| Projeto | Hoje | Com o fabric |
-|---|---|---|
-| **Terraport** | DEX, staking, launchpad | Frontend de perpétuos com a taxa deles por cima, sem construir exchange |
-| **GarudaDefi** | AMM e farms | Mesma linha de receita nova, mais pares melhores com os ativos canônicos |
-| **Terraswap** | AMM original da chain | Volume de arbitragem novo vindo do leilão interno |
-| **Eris e demais LSTs** | Staking líquido em contrato | Rotas multichain para seus tokens; coexistência declarada, nada é desabilitado |
-| **Validadores** | Recompensas minguando com o Oracle Pool baixo | 50% do excedente do protocolo reabastece o Oracle Pool, e o stLUNC mantém o stake delegado |
-
-Sobre o staking líquido nativo: ele existe porque o caminho de liquidação dos perpétuos exige um ativo do próprio banco da chain, sem contrato de terceiro no meio — e porque **o colateral do sistema precisa ser neutro: o módulo nunca vota**, com teto por validador e teto global. O colateral de todos não pode ser a máquina de votos de nenhum projeto — incluindo este. Os LSTs existentes continuam operando e ganham rotas multichain se quiserem. **Compromisso de processo:** conversa direta com os times da chain antes de qualquer votação.
-
----
-
-## 7. Para onde vai a receita: a cascata
-
-![A cascata da receita: fundo de seguro até a meta, operação, e o excedente em 50% Oracle Pool, 20% Community Pool e 30% queima](img/06-cascata.png)
-
-Três regras acompanham a cascata, e as três são código:
-
-1. **A queima é paga pelo lucro, nunca pela segurança.** Nada é queimado nem repassado com o fundo de seguro abaixo da meta. Isso é não governável.
-2. **Sem meta, sem número, sem promessa.** O número de queima é o que o excedente pagar, e o histórico on-chain é a única propaganda.
-3. **Queima nunca é argumento de preço.** Comunicar a cascata pode; prometer efeito, não.
-
-E há queima antes mesmo dos perpétuos: **20% da taxa do staking líquido queima LUNC diretamente, sem conversão, desde a etapa do stLUNC** — pequena no início, verdadeira desde o primeiro dia, crescendo com o TVL. Além da cascata, todo o volume novo que o fabric gera paga gas e passa pela tributação on-chain vigente, alimentando a queima e o Community Pool que **já existem**.
-
----
-
-## 8. Roadmap por portões, não por datas
-
-| Etapa | Entrega | Só avança se |
-|---|---|---|
-| **Fundação** | Hyperlane nativo, LUNC canônico, migração das representações antigas, prova de lastro pública | Auditoria concluída; conta fechando bloco a bloco |
-| **Staking líquido** | stLUNC com receita própria e queima direta ativa | Auditoria dedicada; 30 dias de invariantes limpas |
-| **Portão de demanda** | Cartas de 3 formadores de mercado independentes + parecer jurídico | Sem compromissos assinados, os perpétuos não começam |
-| **Testnet incentivada** | Motor de leilão + perpétuos + oráculo estendido | 60 dias de métricas cumpridas; zero violação de invariante |
-| **BTC-PERP em mainnet** | Primeiro mercado, teto baixo | **Pelo menos 2 integradores em produção** |
-| **Expansão** | ETH-PERP, stLUNC como garantia, LUNC-PERP por último | Critérios de continuidade medidos aos 6 meses |
-
-Esforço estimado: fundação **4,5–7,5 engenheiro-mês**; camada financeira completa **27–41**, mais auditorias com orçamento próprio. Cada etapa tem ponto de parada honroso: um projeto que entrega a fundação e o staking líquido, e para aí, entregou valor real.
-
-A chain roda Cosmos SDK v0.53, o que permite integrar os módulos oficiais do Hyperlane por composição, sem reescrever — a premissa técnica mais importante já está confirmada.
-
----
-
-## 9. Os riscos, ditos de frente
-
-| Risco | Como o desenho responde |
+| Layer | What it delivers |
 |---|---|
-| Demanda não aparecer | Portões: nada avança sem compromissos assinados; a fundação já entrega valor sozinha |
-| Dependência de integradores | Lançamento exige 2 em produção; kit pronto reduz integração a dias; o console garante saída sempre |
-| Falha ou atraso de ponte | Ordens não passam pela ponte; valor em trânsito nunca se perde; 5 assinantes independentes, tolera 2 fora |
-| Manipulação de mercado | Teto de posições limitado pela profundidade real, verificado em código; LUNC-PERP por último e restrito |
-| Regulatório | Parecer jurídico é portão obrigatório antes de qualquer mercado; interfaces distribuídas, protocolo neutro |
-| Risco de mercado do investidor | **Não é reversível, e esta proposta não dirá o contrário.** O que garantimos: atraso nunca vira perda de principal, e a proteção não depende de reflexo humano |
-| Execução e concentração | Equipe mínima é condição de portão, não recomendação; especificação pública permite continuidade por terceiros |
+| **Multichain assets** | Canonical LUNC, with an auditable representation on each network |
+| **Multichain accounts** | Any wallet operates with one signature, no manual bridging |
+| **Trust** | Backing verified in consensus every block, with automatic pause |
+| **Execution** | Single-price auction and perpetuals with protections written on-chain |
+| **Native capital** | stLUNC as neutral collateral that never votes for anyone |
+| **Distribution** | DEXes and wallets integrate, charge their own fee and bring the customer |
+
+```mermaid
+flowchart TB
+    subgraph L6["6 · Distribution"]
+        D["DEXes · wallets · bots<br/>integrate and charge their own fee"]
+    end
+    subgraph L5["5 · Native capital"]
+        C["stLUNC — neutral collateral, never votes"]
+    end
+    subgraph L4["4 · Execution"]
+        E["Single-price auction · perpetuals · on-chain stop and target"]
+    end
+    subgraph L3["3 · Trust"]
+        T["Proof of backing every block · automatic pause"]
+    end
+    subgraph L2["2 · Multichain accounts"]
+        A["One signature from any wallet on any chain"]
+    end
+    subgraph L1["1 · Multichain assets"]
+        M["Canonical LUNC with auditable representation per network"]
+    end
+    L6 --> L5 --> L4 --> L3 --> L2 --> L1
+```
 
 ---
 
-## 10. O que esta proposta pede
+## 4. How it works, without jargon
 
-1. **Aprovação do escopo da Fundação e do staking líquido** (etapas 0 a 6), com orçamento de **[ORÇAMENTO]** e equipe de **[EQUIPE]**, liberado por marcos auditáveis — não um cheque, uma sequência de entregas verificáveis.
-2. **Reconhecimento da cascata de alocação** — fundo até a meta, operação com teto, e o excedente em 50% Oracle Pool / 20% Community Pool / 30% queima — como compromisso em código, consultável por qualquer um, época a época.
-3. **Mandato para as conversas de integração** com os times da própria chain (Terraport, Garuda, Terraswap, Eris) e com carteiras e DEXes de fora, e para os pilotos com formadores de mercado — tudo antes de qualquer linha da camada de perpétuos.
+### 4.1 Backing that is proven
 
-A camada de perpétuos **volta ao plenário** com seus próprios portões cumpridos: compromissos assinados, parecer jurídico e testnet medida. Ninguém está pedindo aprovação para promessas.
+The rule is an equation the chain checks every block:
+
+> **LUNC locked here = LUNC represented out there + LUNC in transit.**
+> If the numbers do not match, the route pauses by itself.
+
+```mermaid
+flowchart LR
+    LOCK["LUNC locked<br/>on Terra Classic"] --> EQ{"locked =<br/>represented + in transit ?"}
+    REP["LUNC represented<br/>on Solana · BNB Chain · Ethereum"] --> EQ
+    TR["LUNC in transit<br/>(messages in flight)"] --> EQ
+    EQ -->|yes, every block| OK["Route open<br/>public solvency page updated"]
+    EQ -->|no| PAUSE["Route pauses automatically<br/>event recorded on-chain"]
+    PAUSE --> REV["Public review<br/>including false alarms"]
+```
+
+The solvency page is public: anyone can check, per network, how much is
+represented, how much is locked, the headroom against the cap and the history of
+pauses — **including the false alarms**, because a record that only shows
+successes is not a record. The observer software is open source: "anyone can
+verify" only holds if anyone actually can.
+
+### 4.2 One price for everyone
+
+```mermaid
+flowchart LR
+    S1["1 · Collection<br/>orders are gathered<br/>during the batch window"] --> S2["2 · Sealed bids<br/>no one — not even the block producer —<br/>sees the others' orders"]
+    S2 --> S3["3 · Execution<br/>all matched orders fill<br/>at ONE clearing price"]
+    S3 --> OUT["No advantage for arriving first<br/>no front-running, no MEV on ordering"]
+```
+
+The position of an order inside the block stops being worth money: no bot wins
+by arriving first — not even the one producing the block. The same engine
+executes the perpetuals and any spot market governance may enable later, with no
+new code.
+
+### 4.3 The account comes to the user
+
+```mermaid
+sequenceDiagram
+    participant U as User's wallet<br/>(Solana / BNB Chain / Ethereum)
+    participant B as Hyperlane bridge<br/>(5 independent signers, tolerates 2 down)
+    participant TC as Terra Classic<br/>local account + auction engine
+    U->>B: signs once (intent + funds)
+    B->>TC: verified message
+    TC->>TC: local account created or credited
+    Note over TC: all orders run locally — never through the bridge
+    TC-->>U: position, stop and target live on-chain
+    U->>TC: withdraw (only to the owner's own wallet)
+    TC->>B: locked-destination message
+    B-->>U: funds arrive
+```
+
+The user does not know there is a bridge — and does not need to. Every
+integrated wallet on another network becomes an entry channel into Terra Classic.
+
+### 4.4 Protection lives on the chain, not in the browser
+
+- **Stop and target written on-chain:** they trigger by themselves, even with
+  the investor offline, without internet, with the app closed.
+- **Withdrawals with a locked destination:** funds only leave to the owner's own
+  wallet. Not even a forged bridge message can steal — a bridge compromise
+  becomes an inconvenience, not a loss.
+- **Delay never becomes loss:** a slow message stays pending until it arrives,
+  and anyone can deliver it, including the user, through the redelivery button.
+- **Cap by real liquidity:** no market can grow beyond the depth measured by the
+  oracle — the rule that prevents the class of attack that constrained the
+  sector leader. And LUNC-PERP will be the **last** market, with the most
+  restrictive parameters, not the first.
+- **Orders never cross the bridge:** bridge congestion does not delay a single
+  trade.
+- And the mandatory honesty: **market risk is not reversible** — no venue in the
+  world reverses a price move, and this proposal will not say otherwise. What we
+  guarantee is that delay never becomes loss of principal and that defending a
+  position does not depend on human reflexes.
+
+```mermaid
+flowchart TB
+    POS["Open position<br/>with stop and target on-chain"] --> CHK{"Every block:<br/>oracle price vs stop / target"}
+    CHK -->|neither hit| POS
+    CHK -->|stop or target hit| EXEC["Executed by the chain<br/>user may be offline"]
+    EXEC --> WD["Withdraw only to<br/>the owner's wallet"]
+    WD -->|message delayed| PEND["Pending, never lost<br/>anyone can redeliver"]
+    PEND --> WD
+```
 
 ---
 
-## 11. Transparência permanente
+## 5. The business model: they sell, the chain earns
 
-- A especificação técnica completa (v0.8.1) é pública: cada decisão tem registro, alternativas descartadas e gatilho de revisão; cada dependência externa tem procedimento de verificação e consequência.
-- Toda a contabilidade — lastro por rede, cascata da receita, queima acumulada — é consultável on-chain e exibida na página pública de solvência.
-- Limites críticos são **não governáveis**: alavancagem máxima absoluta, fundo de seguro insacável para tesouraria, saque travado no dono, queima somente do excedente.
+```mermaid
+flowchart TB
+    subgraph INTEGRATORS["Integrators — they bring the customer and charge their own fee on top"]
+        direction LR
+        I1["Terra Classic DEXes<br/>Terraport · Garuda · Terraswap"]
+        I2["Wallets and DEXes on<br/>Solana · BNB Chain · Ethereum"]
+        I3["Bots and<br/>trading tools"]
+    end
+    subgraph FABRIC["Liquidity Fabric — the chain"]
+        P["Protocol fee<br/>assets · accounts · execution · collateral · proof"]
+        CONSOLE["Protocol's own console:<br/>custody · proof of solvency · exit<br/>(close, cancel, withdraw — NO order opening)"]
+    end
+    I1 --> P
+    I2 --> P
+    I3 --> P
+    P --> WATERFALL["Revenue waterfall (section 7)"]
+    CONSOLE -.->|guaranteed exit for every user| P
+```
+
+The industry precedent validates the model: the leading on-chain perpetuals venue
+outsourced distribution to more than a hundred integrators; Solana's Phantom
+wallet routed tens of billions of dollars and earned more than US$ 20 million in
+about a year charging 0.05 % on top — without building an exchange (sources:
+public reports on the builder-codes program — CoinGecko Research, Blockworks,
+2026).
+
+And the rule that guarantees we will never compete with those who distribute us,
+written in code: **the protocol's own interface does only custody, proof of
+solvency and exit** — close position, cancel, withdraw. Opening a position does
+not exist in it. Without opening, it never competes for a single trade; with
+guaranteed exit, no user is ever stuck depending on a third-party interface to
+escape a position.
+
+Launching perpetuals requires **at least two integrators in production** —
+without interfaces there is no product, and the gate makes that literal. The
+integration kit (template, widget, SDK and sandbox) is open and cuts integration
+cost to days.
 
 ---
 
-## Encerramento
+## 6. Those already building here come out ahead
 
-> **A chain que caiu pelo lastro que não se via será a referência do lastro que se prova.**
-
-A comunidade não precisa confiar neste texto. Ela pode ler o código, consultar a chain e verificar cada número — e é exatamente essa a proposta.
-
-**Discussão e contato:** [Issues deste repositório](https://github.com/igorv43/proposal/issues) · [Igor Veras no X](https://x.com/igorsoares62)
-
----
-
-## Diagramas
-
-| # | Arquivo | Fonte SVG |
+| Project | Today | With the Fabric |
 |---|---|---|
-| 1 | [img/01-circuito.png](img/01-circuito.png) — o circuito produtivo do stake | [img-src/01-circuito.svg](img-src/01-circuito.svg) |
-| 2 | [img/02-lastro.png](img/02-lastro.png) — a equação do lastro | [img-src/02-lastro.svg](img-src/02-lastro.svg) |
-| 3 | [img/03-leilao.png](img/03-leilao.png) — o leilão de preço único | [img-src/03-leilao.svg](img-src/03-leilao.svg) |
-| 4 | [img/04-acesso.png](img/04-acesso.png) — acesso multichain | [img-src/04-acesso.svg](img-src/04-acesso.svg) |
-| 5 | [img/05-integradores.png](img/05-integradores.png) — modelo de integradores | [img-src/05-integradores.svg](img-src/05-integradores.svg) |
-| 6 | [img/06-cascata.png](img/06-cascata.png) — a cascata da receita | [img-src/06-cascata.svg](img-src/06-cascata.svg) |
+| **Terraport** | DEX, staking, launchpad | Perpetuals front end with their own fee on top, without building an exchange |
+| **GarudaDefi** | AMM and farms | Same new revenue line, plus better pairs with the canonical assets |
+| **Terraswap** | The chain's original AMM | New arbitrage volume coming from the internal auction |
+| **Eris and other LSTs** | Liquid staking in contracts | Multichain routes for their tokens; declared coexistence, nothing is disabled |
+| **Validators** | Rewards shrinking with a low Oracle Pool | 50 % of the protocol surplus refills the Oracle Pool, and stLUNC keeps the stake delegated |
 
-Para republicar em fóruns, use as URLs absolutas das imagens neste repositório
-(`https://raw.githubusercontent.com/igorv43/proposal/main/img/<arquivo>.png`).
+On native liquid staking: it exists because the liquidation path of the
+perpetuals requires an asset from the chain's own bank module, with no
+third-party contract in between — and because **the system's collateral must be
+neutral: the module never votes**, with a per-validator cap and a global cap.
+Everyone's collateral cannot be anyone's voting machine — including this
+project's. Existing LSTs keep operating and gain multichain routes if they want.
+**Process commitment:** direct conversation with the chain's teams before any
+vote.
+
+---
+
+## 7. Where the revenue goes: the waterfall
+
+```mermaid
+flowchart TB
+    FEES["Protocol fees<br/>(perpetuals + liquid staking)"] --> LS["Liquid-staking fee:<br/>20 % burns LUNC directly,<br/>from day one"]
+    FEES --> W1{"Insurance fund<br/>at target?"}
+    W1 -->|no| FILL["Fill the insurance fund first<br/>nothing burned, nothing passed on"]
+    W1 -->|yes| OPS["Operations<br/>(capped)"]
+    OPS --> SUR["Surplus"]
+    SUR -->|50 %| OP["Oracle Pool"]
+    SUR -->|20 %| CP["Community Pool"]
+    SUR -->|30 %| BURN["LUNC burn"]
+```
+
+```mermaid
+pie showData
+    title Surplus allocation (after insurance fund target and capped operations)
+    "Oracle Pool" : 50
+    "Community Pool" : 20
+    "LUNC burn" : 30
+```
+
+Three rules accompany the waterfall, and all three are code:
+
+1. **Burn is paid by profit, never by security.** Nothing is burned or passed on
+   while the insurance fund is below target. This is non-governable.
+2. **No target, no number, no promise.** The burn figure is whatever the surplus
+   pays, and the on-chain history is the only advertising.
+3. **Burn is never a price argument.** Communicating the waterfall is allowed;
+   promising an effect is not.
+
+And there is burn even before the perpetuals: **20 % of the liquid-staking fee
+burns LUNC directly, with no conversion, from the stLUNC stage** — small at
+first, real from day one, growing with TVL. Beyond the waterfall, all the new
+volume the Fabric generates pays gas and goes through the current on-chain tax,
+feeding the burn and the Community Pool that **already exist**.
+
+---
+
+## 8. Roadmap by gates, not by dates
+
+```mermaid
+flowchart LR
+    S0["Foundation<br/>native Hyperlane · canonical LUNC ·<br/>migration of old wrappers ·<br/>public proof of backing"] --> G0{"Audit done ·<br/>equation closes<br/>block by block"}
+    G0 --> S1["Liquid staking<br/>stLUNC with own revenue ·<br/>direct burn active"]
+    S1 --> G1{"Dedicated audit ·<br/>30 days of clean invariants"}
+    G1 --> S2["Demand gate<br/>letters from 3 independent<br/>market makers + legal opinion"]
+    S2 --> G2{"Signed commitments?<br/>no → perpetuals do not start"}
+    G2 --> S3["Incentivized testnet<br/>auction engine · perpetuals ·<br/>extended oracle"]
+    S3 --> G3{"60 days of metrics met ·<br/>zero invariant violations"}
+    G3 --> S4["BTC-PERP on mainnet<br/>first market, low cap"]
+    S4 --> G4{"At least 2 integrators<br/>in production"}
+    G4 --> S5["Expansion<br/>ETH-PERP · stLUNC as collateral ·<br/>LUNC-PERP last"]
+    S5 --> G5{"Continuity criteria<br/>measured at 6 months"}
+    style G0 fill:#f6e05e,color:#000
+    style G1 fill:#f6e05e,color:#000
+    style G2 fill:#f6e05e,color:#000
+    style G3 fill:#f6e05e,color:#000
+    style G4 fill:#f6e05e,color:#000
+    style G5 fill:#f6e05e,color:#000
+```
+
+| Stage | Deliverable | Advances only if |
+|---|---|---|
+| **Foundation** | Native Hyperlane, canonical LUNC, migration of the old representations, public proof of backing | Audit completed; the equation closes block by block |
+| **Liquid staking** | stLUNC with its own revenue and direct burn active | Dedicated audit; 30 days of clean invariants |
+| **Demand gate** | Letters from 3 independent market makers + legal opinion | Without signed commitments, perpetuals do not start |
+| **Incentivized testnet** | Auction engine + perpetuals + extended oracle | 60 days of metrics met; zero invariant violations |
+| **BTC-PERP on mainnet** | First market, low cap | **At least 2 integrators in production** |
+| **Expansion** | ETH-PERP, stLUNC as collateral, LUNC-PERP last | Continuity criteria measured at 6 months |
+
+Estimated effort: foundation **4.5–7.5 engineer-months**; complete financial
+layer **27–41**, plus audits with their own budget. Every stage has an honourable
+stopping point: a project that delivers the foundation and liquid staking, and
+stops there, has delivered real value.
+
+The chain runs Cosmos SDK v0.53, which allows integrating the official Hyperlane
+modules by composition, without rewriting — the most important technical premise
+is already confirmed.
+
+---
+
+## 9. Who decides what: governance and organization
+
+```mermaid
+flowchart TB
+    GOV["Terra Classic on-chain governance<br/>LUNC holders + validators<br/>approves scope, budget, milestones, parameters"]
+    GOV --> CODE["Non-governable limits (in code)<br/>max leverage · insurance fund not withdrawable to treasury ·<br/>withdrawal locked to owner · burn only from surplus"]
+    GOV --> TEAM["Core team<br/>builds and operates by milestone<br/>funds released per audited delivery"]
+    GOV --> AUD["Independent auditors<br/>gate every stage"]
+    TEAM --> SPEC["Public specification v0.8.1<br/>decisions D-01…D-22 · verifications G-01…G-11<br/>allows continuity by third parties"]
+    TEAM --> KIT["Integration kit<br/>template · widget · SDK · sandbox"]
+    KIT --> INT["Integrators<br/>Terraport · Garuda · Terraswap · Eris ·<br/>external wallets and DEXes"]
+    TEAM --> MM["Market makers<br/>3 independent letters before perpetuals"]
+    TEAM --> LEGAL["Legal counsel<br/>opinion is a mandatory gate"]
+    BRIDGE["Hyperlane validators<br/>5 independent signers, tolerates 2 down"] --> TEAM
+    OBS["Anyone<br/>open observer software · public solvency page"] -.->|verifies| CODE
+```
+
+- **Governance** approves scope and budget per milestone and can change
+  governable parameters; it cannot change the non-governable limits.
+- **The core team** delivers by gates; a minimum team is a gate condition, not a
+  recommendation.
+- **Integrators, market makers and legal counsel** are external and independent;
+  their commitments are gates, not assumptions.
+- **Anyone** can verify the state of the system: the observer software is open
+  and the solvency page is public.
+
+---
+
+## 10. The risks, said up front
+
+| Risk | How the design answers |
+|---|---|
+| Demand does not show up | Gates: nothing advances without signed commitments; the foundation already delivers value on its own |
+| Dependence on integrators | Launch requires 2 in production; the ready kit cuts integration to days; the console guarantees exit always |
+| Bridge failure or delay | Orders do not cross the bridge; value in transit is never lost; 5 independent signers, tolerates 2 down |
+| Market manipulation | Position caps limited by real depth, verified in code; LUNC-PERP last and restricted |
+| Regulatory | Legal opinion is a mandatory gate before any market; distributed interfaces, neutral protocol |
+| The investor's market risk | **Not reversible, and this proposal will not say otherwise.** What we guarantee: delay never becomes loss of principal, and protection does not depend on human reflexes |
+| Execution and concentration | Minimum team is a gate condition, not a recommendation; the public specification allows continuity by third parties |
+
+---
+
+## 11. What this proposal asks
+
+1. **Approval of the scope of the Foundation and liquid staking** (stages 0 to
+   6), with a budget of **[BUDGET]** and a team of **[TEAM]**, released by
+   auditable milestones — not a cheque, a sequence of verifiable deliveries.
+2. **Recognition of the allocation waterfall** — fund up to target, operations
+   with a cap, and the surplus 50 % Oracle Pool / 20 % Community Pool / 30 %
+   burn — as a commitment in code, queryable by anyone, epoch by epoch.
+3. **A mandate for the integration conversations** with the chain's own teams
+   (Terraport, Garuda, Terraswap, Eris) and with outside wallets and DEXes, and
+   for the pilots with market makers — all before any line of the perpetuals
+   layer.
+
+The perpetuals layer **returns to the floor** with its own gates met: signed
+commitments, legal opinion and a measured testnet. Nobody is asking for approval
+of promises.
+
+---
+
+## 12. Permanent transparency
+
+- The complete technical specification (v0.8.1) is public: every decision has a
+  record, discarded alternatives and a review trigger; every external dependency
+  has a verification procedure and a consequence.
+- All accounting — backing per network, revenue waterfall, accumulated burn — is
+  queryable on-chain and shown on the public solvency page.
+- Critical limits are **non-governable**: absolute maximum leverage, insurance
+  fund not withdrawable to treasury, withdrawal locked to the owner, burn only
+  from surplus.
+
+---
+
+## Closing
+
+> **The chain that fell because of backing no one could see will become the
+> reference for backing that is proven.**
+
+The community does not need to trust this text. It can read the code, query the
+chain and verify every number — and that is exactly the proposal.
+
+**Discussion and contact:** [Issues of this repository](https://github.com/igorv43/proposal/issues) · [Igor Veras on X](https://x.com/igorsoares62)
+
+---
+
+## Glossary
+
+| Term | Meaning |
+|---|---|
+| **LUNC** | Luna Classic, the native coin of the Terra Classic blockchain |
+| **stLUNC** | Liquid-staking token: represents staked LUNC, keeps earning, can be used as collateral, and the module behind it never votes |
+| **Perpetuals (perps)** | Derivative contracts with no expiry, used for hedging or leverage |
+| **Single-price auction** | Orders are collected in a batch and all fill at one clearing price; being first in the block gives no advantage |
+| **Collateral / haircut** | Assets pledged to back a position; the haircut is the discount applied to their value for safety |
+| **Insurance fund** | Reserve that absorbs losses before anyone else; filled before any surplus is distributed |
+| **Oracle Pool** | The pool that pays Terra Classic validators for oracle work; a share of the surplus refills it |
+| **Community Pool** | Terra Classic's on-chain treasury, controlled by governance |
+| **Hyperlane** | The interoperability protocol used for messages and asset transfers between Terra Classic and other chains |
+| **Canonical LUNC** | The single official representation of LUNC on each external network, with backing proven on-chain |
+| **Invariant** | A rule the system must never break (e.g. locked = represented + in transit); a violation pauses the route |
+| **Gate** | A verifiable condition that must be met before the next stage starts |
+| **TVL** | Total value locked in a protocol or chain |
+| **LST** | Liquid-staking token (e.g. Eris's) |
+| **Market maker** | A firm that continuously quotes buy and sell prices, providing liquidity |
+
+## Diagrams
+
+All diagrams in this document are written in [Mermaid](https://mermaid.js.org/)
+and render natively on GitHub. The Portuguese version uses the same diagrams as
+images: PNG in [`img/`](img/) and SVG sources in [`img-src/`](img-src/).
