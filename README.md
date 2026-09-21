@@ -343,7 +343,7 @@ feeding the burn and the Community Pool that **already exist**.
 ## 8. Roadmap by gates, not by dates
 
 ```mermaid
-flowchart LR
+flowchart TB
     S0["Foundation<br/>native Hyperlane · canonical LUNC ·<br/>migration of old wrappers ·<br/>public proof of backing"] --> G0{"Audit done ·<br/>equation closes<br/>block by block"}
     G0 --> S1["Liquid staking<br/>stLUNC with own revenue ·<br/>direct burn active"]
     S1 --> G1{"Dedicated audit ·<br/>30 days of clean invariants"}
